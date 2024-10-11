@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - expo-boilerplate
   pull_request:
     branches:
       - main
