@@ -20,11 +20,21 @@ export function storeEvent(trip: Trip, event: Event) {
 }
 
 export function getTrip(trip: string) {
-  bootstrap();
-  console.log(trip);
+  bootstrap()
+    .then(() => {
+      console.log(trip);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 export function getEvent(event: string) {
-  bootstrap();
-  console.log(event);
+  bootstrap()
+    .then(() => {
+      console.log(event);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
