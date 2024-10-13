@@ -10,14 +10,21 @@ async function bootstrap() {
   });
 }
 
-export function storeTrip(trip: Trip) {}
+export function storeTrip(trip: Trip) {
+  console.log(trip);
+}
 
-export function storeEvent(trip: Trip, event: Event) {}
+export function storeEvent(trip: Trip, event: Event) {
+  console.log(trip);
+  console.log(event);
+}
 
 export function getTrip(trip: string) {
   bootstrap();
+  console.log(trip);
 }
 
 export function getEvent(event: string) {
   bootstrap();
+  console.log(event);
 }
