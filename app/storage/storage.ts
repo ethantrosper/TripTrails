@@ -14,6 +14,10 @@ export function storeTrip(trip: Trip) {}
 
 export function storeEvent(trip: Trip, event: Event) {}
 
-export function getTrip(trip: string) {}
+export function getTrip(trip: string) {
+  bootstrap();
+}
 
-export function getEvent(event: string) {}
+export function getEvent(event: string) {
+  bootstrap();
+}
