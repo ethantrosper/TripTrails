@@ -1,7 +1,6 @@
 {
   "expo": {
     "name": "trip-trials",
-    "slug": "trip-trials",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,19 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.triptrials"
+      }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
+      "favicon": "./assets/images/favicon.png",
+      "plugins": ["expo-router"],
+      "experiments": {
+        "typedRoutes": true
+      }
     }
   }
 }
