@@ -3,6 +3,7 @@ import { Event } from "./Event";
 
 export class Trip extends Realm.Object<Trip, "description"> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
+  location!: string;
   events!: Event[];
   description!: string;
   createdAt: Date = new Date();

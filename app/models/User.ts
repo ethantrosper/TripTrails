@@ -3,6 +3,8 @@ import { Trip } from "./Trip";
 
 export class User extends Realm.Object<User> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
+  username!: string;
+  password!: string;
   Trips!: Trip[];
   createdAt: Date = new Date();
   updatedAt: Date = new Date();
@@ -17,6 +19,14 @@ export class User extends Realm.Object<User> {
       createdAt: {
         type: "date",
         default: new Date(),
+      },
+      username: {
+        type: "string",
+        default: ""
+      },
+      password: {
+        type: "string",
+        default: ""
       },
       updatedAt: {
         type: "date",
