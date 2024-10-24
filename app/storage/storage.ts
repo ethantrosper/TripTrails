@@ -2,9 +2,24 @@ import { Realm } from "@realm/react";
 import { Test } from "../models/Test";
 import { Trip } from "../models/Trip";
 import { User } from "../models/User";
+import { Event } from "../models/Event";
+import { realmConfig } from "./config";
+
+// DATABASE FUNCTIONS
+let realm: Realm;
+
+export const initializeRealm = async () => {
+  realm = await Realm.open(realmConfig);
+  return realm;
+};
+
+export const closeRealm = () => {
+  if (realm && !realm.isClosed) {
+    realm.close();
+  }
+};
 
 //TEST FUNCTIONS
-
 export const insertTest = (realm: Realm): Promise<Test> => {
   return new Promise((resolve, reject) => {
     try {
@@ -32,7 +47,11 @@ export const getAllTests = (realm: Realm): Realm.Results<Test> => {
 };
 
 // USER FUNCTIONS
-export const insertUser = (realm: Realm, user: string, pass: string): Promise<Test> => {
+export const insertUser = (
+  realm: Realm,
+  user: string,
+  pass: string,
+): Promise<User> => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
@@ -40,7 +59,7 @@ export const insertUser = (realm: Realm, user: string, pass: string): Promise<Te
           _id: new Realm.BSON.ObjectId(),
           username: user,
           password: pass,
-          createdAt:Date.now(),
+          createdAt: new Date(),
         });
         resolve(newUser);
       });
@@ -51,18 +70,24 @@ export const insertUser = (realm: Realm, user: string, pass: string): Promise<Te
   });
 };
 
-
 // TRIP FUNCTIONS
-export const insertTrip = (realm: Realm, sentLocation: string, sentDescription: string): Promise<Test> => {
+export const insertTrip = (
+  realm: Realm,
+  user: User,
+  location: string,
+  description: string,
+): Promise<Trip> => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
         const newTrip = realm.create<Trip>("Trip", {
           _id: new Realm.BSON.ObjectId(),
-          location: sentLocation,
-          description: sentDescription,
-          createdAt:Date.now(),
+          location,
+          description,
+          createdAt: new Date(),
         });
+        // Add the trip to the user's trips list
+        user.trips.push(newTrip);
         resolve(newTrip);
       });
     } catch (error) {
@@ -72,35 +97,39 @@ export const insertTrip = (realm: Realm, sentLocation: string, sentDescription: 
   });
 };
 
-
-export const getAllTrips = (realm: Realm): Realm.Results<Trip> => {
-  return realm.objects<Trip>("Trip").sorted("_id", true);
+export const getUserTrips = (user: User): Realm.List<Trip> => {
+  return user.trips;
 };
 
-
-
 // EVENT FUNCTIONS
-export const insertEvent = (realm: Realm, sentLocation: string, sentDescription: string, date: Date): Promise<Test> => {
+export const insertEvent = (
+  realm: Realm,
+  trip: Trip,
+  location: string,
+  description: string,
+  eventDate: Date,
+): Promise<Event> => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
-        const newTrip = realm.create<Event>("Event", {
+        const newEvent = realm.create<Event>("Event", {
           _id: new Realm.BSON.ObjectId(),
-          description: sentDescription,
-          location: sentLocation,
-          eventDate: date,
-          createdAt:Date.now(),
+          description,
+          location,
+          eventDate,
+          createdAt: new Date(),
         });
-        resolve(newTrip);
+        // Add the event to the trip's events list
+        trip.events.push(newEvent);
+        resolve(newEvent);
       });
     } catch (error) {
-      console.error("Error creating Trip:", error);
+      console.error("Error creating Event:", error);
       reject(error);
     }
   });
 };
 //FIX THIS
-export const getAllTripvents = (realm: Realm, trip: string): Realm.Results<Trip> => {
-  return realm.objects<Trip>("Trip").sorted("_id", true);
+export const getTripEvents = (trip: Trip): Realm.List<Event> => {
+  return trip.events;
 };
-

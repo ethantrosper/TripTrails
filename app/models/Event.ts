@@ -3,12 +3,17 @@ import Realm, { ObjectSchema } from "realm";
 export class Event extends Realm.Object<Event> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
   description!: string;
+  note?: string;
   location!: string;
   eventDate!: Date;
+  eventTimeStart?: Date;
+  eventTimeEnd?: Date;
   createdAt: Date = new Date();
-  updatedAt: Date = new Date();
   isComplete = false;
-  tripId: Realm.BSON.ObjectId;
+  category?: string;
+  mapUrl?: string;
+  alertDate?: Date;
+  alert: boolean = false;
 
   static primaryKey = "_id";
   static schema: ObjectSchema = {
@@ -16,16 +21,17 @@ export class Event extends Realm.Object<Event> {
     primaryKey: "_id",
     properties: {
       _id: "objectId",
+      location: "string",
       description: "string",
-      eventDate: {
-        type: "date",
-        default: new Date(),
-      },
+      eventDate: "date",
+      category: "string",
+      mapUrl: "string",
+      eventTimeStart: "date",
+      eventTimeEnd: "date",
+      note: "string",
+      alertDate: "date",
+      alert: "bool",
       createdAt: {
-        type: "date",
-        default: new Date(),
-      },
-      updatedAt: {
         type: "date",
         default: new Date(),
       },
@@ -34,10 +40,6 @@ export class Event extends Realm.Object<Event> {
         default: false,
         indexed: true,
       },
-      //need to do this when i actually have a dev environment with Realm
-      tripId: {
-        
-      }
     },
   };
 }

@@ -3,12 +3,15 @@ import { Event } from "./Event";
 
 export class Trip extends Realm.Object<Trip, "description"> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
-  location!: string;
-  events!: Event[];
+  title!: string;
   description!: string;
-  createdAt: Date = new Date();
-  updatedAt: Date = new Date();
+  location!: string;
+  events!: Realm.List<Event>;
+  tripColor!: string;
   isComplete = false;
+  createdAt: Date = new Date();
+  startDate: Date = new Date();
+  endDate: Date = new Date();
 
   static primaryKey = "_id";
   static schema: ObjectSchema = {
@@ -16,20 +19,21 @@ export class Trip extends Realm.Object<Trip, "description"> {
     primaryKey: "_id",
     properties: {
       _id: "objectId",
-      events: "Event[]",
       description: "string",
-      createdAt: {
-        type: "date",
-        default: new Date(),
-      },
-      updatedAt: {
-        type: "date",
-        default: new Date(),
-      },
+      createdAt: "date",
+      title: "string",
+      location: "string",
+      startDate: "date",
+      endDate: "date",
+      tripColor: "string",
       isComplete: {
         type: "bool",
         default: false,
         indexed: true,
+      },
+      events: {
+        type: "list",
+        objectType: "Event",
       },
     },
   };
