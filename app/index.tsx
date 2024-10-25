@@ -1,17 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import LoginPage from './LoginPage';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './AppNavigator';
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <LoginPage />
-    </View>
+    <NavigationContainer independent={true}>
+      <AppNavigator />
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default App;

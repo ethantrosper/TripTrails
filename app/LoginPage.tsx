@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import LoginPageStyles from './LoginPageStyle';
+import { Ionicons } from '@expo/vector-icons';
 
 const logoImage = require('../assets/images/app-logo.png');
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'password123') {
@@ -19,16 +22,18 @@ const LoginPage = () => {
 
   return (
     <View style={LoginPageStyles.container}>
-      {/* Image Icon */}
-      <Image
-        source={logoImage}
-        style={LoginPageStyles.logo}
-      />
+      {/* App Title */}
+      <Text style={LoginPageStyles.appTitle}>TripTrails</Text>
 
-      <Text style={LoginPageStyles.welcomeText}>Welcome to TripTrails!</Text>
-      <StatusBar style="auto" />
+      {/* Logo and Intro Text */}
+      <Image source={logoImage} style={LoginPageStyles.logo} />
+      <Text style={LoginPageStyles.signInText}>Sign in to TripTrails</Text>
+      <Text style={LoginPageStyles.welcomeMessage}>
+        Welcome! Please sign in to continue.
+      </Text>
 
       {/* Username Input */}
+      <Text style={LoginPageStyles.inputLabel}>Username</Text>
       <TextInput
         style={LoginPageStyles.input}
         placeholder="Enter Username"
@@ -37,22 +42,51 @@ const LoginPage = () => {
       />
 
       {/* Password Input */}
-      <TextInput
-        style={LoginPageStyles.input}
-        placeholder="Enter Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <Text style={LoginPageStyles.inputLabel}>Password</Text>
+      <View style={{ position: 'relative', width: '100%' }}>
+        <TextInput
+          style={LoginPageStyles.input}
+          placeholder="Enter Password"
+          secureTextEntry={!passwordVisible}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          onPress={() => setPasswordVisible(!passwordVisible)}
+          style={LoginPageStyles.eyeIconContainer}
+        >
+        <Ionicons
+          name={passwordVisible ? 'eye-off' : 'eye'}
+          size={24}
+          color="#555"
+        />
+        </TouchableOpacity>
+      </View>
+
+      {/* Forgot Password Link */}
+      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+        <Text style={LoginPageStyles.forgotPassword}>Forgot password?</Text>
+      </TouchableOpacity>
 
       {/* Login Button */}
-      <TouchableOpacity 
-        style={LoginPageStyles.button} 
-        onPress={handleLogin}        
-      >
-        <Text style={LoginPageStyles.buttonText}>Login</Text>
+      <TouchableOpacity style={LoginPageStyles.button} onPress={handleLogin}>
+        <Text style={LoginPageStyles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+
+      {/* Footer */}
+      <View style={LoginPageStyles.footer}>
+        <Text style={LoginPageStyles.footerText}>
+          Don’t have an account?{' '}
+          <Text 
+            style={LoginPageStyles.signUpText} 
+            onPress={() => navigation.navigate('SignUp')}
+          >
+            Sign Up
+          </Text>
+        </Text>
+      </View>
     </View>
   );
 };
+
 export default LoginPage;
