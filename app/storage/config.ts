@@ -10,7 +10,7 @@ export const realmConfig = {
   deleteRealmIfMigrationNeeded: true, // Only use during development
 };
 
-//For migrations
+//For actual production, this is for migrations
 /*
 const realmConfig = {
   schema: [User, Trip, Event],

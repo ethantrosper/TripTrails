@@ -9,7 +9,7 @@ export class Event extends Realm.Object<Event> {
   eventTimeStart?: Date;
   eventTimeEnd?: Date;
   createdAt: Date = new Date();
-  isComplete = false;
+  isComplete: boolean = false;
   category?: string;
   mapUrl?: string;
   alertDate?: Date;
@@ -23,9 +23,9 @@ export class Event extends Realm.Object<Event> {
       _id: "objectId",
       location: "string",
       description: "string",
-      eventDate: "date",
       category: "string",
       mapUrl: "string",
+      eventDate: "date",
       eventTimeStart: "date",
       eventTimeEnd: "date",
       note: "string",
