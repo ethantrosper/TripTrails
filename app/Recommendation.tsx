@@ -1,0 +1,180 @@
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+
+export default function Recommendation() {
+  return (
+    <View style={styles.container}>
+      {/* Top Tab Navigation */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity style={styles.tabButton}>
+          <Text style={styles.tabTextSelected}>Food</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabButton}>
+          <Text style={styles.tabText}>Entertainment</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabButton}>
+          <Text style={styles.tabText}>Shopping</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Recommendation List */}
+      <ScrollView style={styles.scrollContainer}>
+        {[{
+          title: "McDonald's",
+          description: "Description or Categorization of the place",
+          rating: "5"
+        }, {
+          title: "Title",
+          description: "Description or Categorization of the place",
+          rating: "4.5"
+        }, {
+          title: "Title",
+          description: "Description or Categorization of the place",
+          rating: "4.4"
+        }].map((item, index) => (
+          <View key={index} style={styles.card}>
+            <Image style={styles.image} source={require('../assets/images/react-logo.png')} />
+            <View style={styles.cardContent}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>{item.description}</Text>
+              <TouchableOpacity style={styles.addButton}>
+                <Text style={styles.addButtonText}>Add to trip</Text>
+              </TouchableOpacity>
+              <Text style={styles.rating}>{item.rating} ★</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Text>🏠</Text>
+          <Text style={styles.navText}>Dashboard</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text>⭐</Text>
+          <Text style={styles.navText}>Recommend</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addButtonMain}>
+          <Text style={styles.addButtonMainText}>+</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text>🔍</Text>
+          <Text style={styles.navText}>Search</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text>👤</Text>
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  tabButton: {
+    padding: 16,
+  },
+  tabTextSelected: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#888',
+  },
+  scrollContainer: {
+    padding: 16,
+  },
+  card: {
+    flexDirection: 'row',
+    padding: 16,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    marginRight: 16,
+  },
+  cardContent: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 8,
+  },
+  addButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    backgroundColor: '#eee',
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 4,
+    alignSelf: 'flex-start',
+  },
+  addButtonText: {
+    fontSize: 12,
+  },
+  rating: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#444',
+    marginTop: 4,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navText: {
+    fontSize: 12,
+    color: '#888',
+  },
+  addButtonMain: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#c7a4ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    bottom: 15,
+  },
+  addButtonMainText: {
+    fontSize: 24,
+    color: '#fff',
+  },
+});

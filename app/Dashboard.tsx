@@ -1,8 +1,10 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from 'react-native-calendars';
+import { useRouter } from 'expo-router';
 
 export default function Dashboard() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.container}>
       {/* ScrollView for scrollable content */}
@@ -34,7 +36,10 @@ export default function Dashboard() {
         <TouchableOpacity style={styles.navButton}>
           <Text style={styles.navText}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => router.push("/Recommendation")} // Navigate to the Recommendation page
+        >
           <Text style={styles.navText}>Recommend</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton}>
