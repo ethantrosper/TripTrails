@@ -1,40 +1,28 @@
-import { Trip } from "../objects/Trip";
-import { Event } from "../objects/Event";
+import { Realm } from "@realm/react";
+import { Test } from "../models/Test";
 
-import firestore from "@react-native-firebase/firestore";
-
-// For offline functionality, call this for the get functions
-async function bootstrap() {
-  await firestore().settings({
-    persistence: true, // disable offline persistence
+export const insertTest = (realm: Realm): Promise<Test> => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const newTest = realm.create<Test>("Test", {
+          _id: new Realm.BSON.ObjectId(),
+          description: `Test item ${Date.now()}`,
+        });
+        resolve(newTest);
+      });
+    } catch (error) {
+      console.error("Error creating Test:", error);
+      reject(error);
+    }
   });
-}
+};
 
-export function storeTrip(trip: Trip) {
-  console.log(trip);
-}
+export const getLastInsertedTest = (realm: Realm): Test | null => {
+  const allTests = realm.objects<Test>("Test").sorted("_id", true);
+  return allTests.length > 0 ? allTests[0] : null;
+};
 
-export function storeEvent(trip: Trip, event: Event) {
-  console.log(trip);
-  console.log(event);
-}
-
-export function getTrip(trip: string) {
-  bootstrap()
-    .then(() => {
-      console.log(trip);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
-export function getEvent(event: string) {
-  bootstrap()
-    .then(() => {
-      console.log(event);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
+export const getAllTests = (realm: Realm): Realm.Results<Test> => {
+  return realm.objects<Test>("Test").sorted("_id", true);
+};

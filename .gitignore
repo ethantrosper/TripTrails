@@ -187,6 +187,3 @@ DerivedData/
 
 expo-env.d.ts
 # @end expo-cli
-
-# Firebase Android Config
-google-services.json
