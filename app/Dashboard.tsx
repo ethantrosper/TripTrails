@@ -2,62 +2,53 @@ import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from 'react-native-calendars';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        {/* ScrollView for scrollable content */}
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* Title in the upper left corner */}
-          <Text style={styles.h1}>Welcome to TripTrails!</Text>
+export default function Dashboard() {
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* ScrollView for scrollable content */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Title in the upper left corner */}
+        <Text style={styles.h1}>Welcome to TripTrails!</Text>
 
-          {/* Subtitle */}
-          <Text style={styles.h2}>
-            Your New Adventure Starts Here!
-          </Text>
+        {/* Subtitle */}
+        <Text style={styles.h2}>
+          Your New Adventure Starts Here!
+        </Text>
 
-          {/* Calendar Component */}
-          <View style={styles.calendarContainer}>
-            <Calendar
-              // Initially visible month. Default = Date()
-              current={new Date().toISOString().split('T')[0]}
-              // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-              minDate={'2020-05-10'}
-              // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-              maxDate={'2025-05-30'}
-              // Month format in calendar title. The following options are possible:
-              monthFormat={'MM / yyyy'}
-              // Hide month navigation arrows. Default = false
-              hideArrows={false}
-              // Disable all touch events for disabled days. Default = false
-              disableAllTouchEventsForDisabledDays={true}
-              // Enable the option to swipe between months. Default = false
-              enableSwipeMonths={true}
-            />
-          </View>
-        </ScrollView>
-
-        {/* Bottom Navigation - Fixed at the bottom */}
-        <View style={styles.bottomNavContainer}>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navText}>Dashboard</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navText}>Recommend</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navText}>Add Trip</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navText}>Search</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navText}>Profile</Text>
-          </TouchableOpacity>
+        {/* Calendar Component */}
+        <View style={styles.calendarContainer}>
+          <Calendar
+            current={new Date().toISOString().split('T')[0]}
+            minDate={'2020-05-10'}
+            maxDate={'2025-05-30'}
+            monthFormat={'MM / yyyy'}
+            hideArrows={false}
+            disableAllTouchEventsForDisabledDays={true}
+            enableSwipeMonths={true}
+          />
         </View>
-      </SafeAreaView>
-    );
-  }
+      </ScrollView>
+
+      {/* Bottom Navigation - Fixed at the bottom */}
+      <View style={styles.bottomNavContainer}>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.navText}>Dashboard</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.navText}>Recommend</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.navText}>Add Trip</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.navText}>Search</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

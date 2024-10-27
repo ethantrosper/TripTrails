@@ -8,9 +8,11 @@ import { Test } from "./models/Test";
 export default function RootLayout() {
   return (
 
-    <Stack>
-      <Stack.Screen name="Welcome to TripTrails!" />
-    </Stack>
+    <RealmProvider schema={[Event, Trip, User, Test]}>
+      <Stack>
+        <Stack.Screen name="Dashboard" />
+      </Stack>
+    </RealmProvider>
 
   );
 }
