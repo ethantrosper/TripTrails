@@ -24,8 +24,9 @@ export default function RootLayout() {
   return (
     <RealmProvider {...realmConfig}>
       <Stack>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="Dashboard" />
       </Stack>
     </RealmProvider>
+
   );
 }
