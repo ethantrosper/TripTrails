@@ -49,17 +49,23 @@ export const getAllTests = (realm: Realm): Realm.Results<Test> => {
 // USER FUNCTIONS
 export const insertUser = (
   realm: Realm,
-  user: string,
-  pass: string,
+  username: string, // required
+  password: string, // required
 ): Promise<User> => {
   return new Promise((resolve, reject) => {
+    if (!username || !password) {
+      reject(new Error("Username and password are required"));
+      return;
+    }
+
     try {
       realm.write(() => {
         const newUser = realm.create<User>("User", {
           _id: new Realm.BSON.ObjectId(),
-          username: user,
-          password: pass,
+          username,
+          password,
           createdAt: new Date(),
+          trips: [],
         });
         resolve(newUser);
       });
@@ -74,11 +80,19 @@ export const insertUser = (
 export const insertTrip = (
   realm: Realm,
   user: User,
-  title: string,
-  location: string,
-  description: string,
+  title: string, // required
+  location: string, // required
+  startDate: Date, // required
+  endDate: Date, // required
+  description?: string, // optional
+  tripColor?: string, // optional
 ): Promise<Trip> => {
   return new Promise((resolve, reject) => {
+    // Validate required fields
+    if (!title || !location || !startDate || !endDate) {
+      reject(new Error("Title, location, startDate, and endDate are required"));
+      return;
+    }
     try {
       realm.write(() => {
         const newTrip = realm.create<Trip>("Trip", {
@@ -86,12 +100,13 @@ export const insertTrip = (
           title,
           location,
           description,
+          tripColor,
+          startDate,
+          endDate,
           createdAt: new Date(),
-          startDate: new Date(),
-          endDate: new Date(),
-          tripColor: "#007AFF", // Default color
+          isComplete: false,
+          events: [],
         });
-        // Add the trip to the user's trips list
         user.trips.push(newTrip);
         resolve(newTrip);
       });
@@ -153,34 +168,39 @@ export const deleteTrip = (trip: Trip) => {
 export const insertEvent = (
   realm: Realm,
   trip: Trip,
-  description: string,
-  note: string,
-  location: string,
-  eventDate: Date,
-  eventTimeStart: Date,
-  eventTimeEnd: Date,
-  category: string,
-  mapUrl: string,
-  alertDate: Date,
-  alert: boolean,
+  location: string, // required
+  eventDate: Date, // required
+  eventTimeStart?: Date, // optional
+  description?: string, // optional
+  note?: string, // optional
+  eventTimeEnd?: Date, // optional
+  category?: string, // optional
+  mapUrl?: string, // optional
+  alertDate?: Date, // optional
+  alert?: boolean, // optional
 ): Promise<Event> => {
   return new Promise((resolve, reject) => {
+    if (!location || !eventDate) {
+      reject(new Error("Location and eventDate are required"));
+      return;
+    }
     try {
       realm.write(() => {
         const newEvent = realm.create<Event>("Event", {
           _id: new Realm.BSON.ObjectId(),
-          description,
           location,
           eventDate,
+          eventTimeStart,
+          description,
+          note,
+          eventTimeEnd,
           category,
           mapUrl,
-          eventTimeStart,
-          eventTimeEnd,
           alertDate,
           alert,
           createdAt: new Date(),
+          isComplete: false,
         });
-        // Add the event to the trip's events list
         trip.events.push(newEvent);
         resolve(newEvent);
       });

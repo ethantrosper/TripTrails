@@ -1,36 +1,42 @@
 import Realm, { ObjectSchema } from "realm";
 import { Event } from "./Event";
 
-export class Trip extends Realm.Object<Trip, "description"> {
-  _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
+export class Trip extends Realm.Object<Trip> {
+  _id!: Realm.BSON.ObjectId;
   title!: string;
-  description!: string;
+  description?: string;
   location!: string;
   events!: Realm.List<Event>;
-  tripColor!: string;
-  isComplete = false;
-  createdAt: Date = new Date();
-  startDate: Date = new Date();
-  endDate: Date = new Date();
+  tripColor?: string;
+  isComplete: boolean = false;
+  createdAt!: Date;
+  startDate!: Date;
+  endDate!: Date;
 
   static primaryKey = "_id";
   static schema: ObjectSchema = {
     name: "Trip",
     primaryKey: "_id",
     properties: {
-      _id: "objectId",
-      description: "string",
-      createdAt: "date",
+      _id: {
+        type: "objectId",
+        default: () => new Realm.BSON.ObjectId(),
+      },
       title: "string",
+      description: "string?",
       location: "string",
-      startDate: "date",
-      endDate: "date",
-      tripColor: "string",
+      tripColor: "string?",
       isComplete: {
         type: "bool",
         default: false,
         indexed: true,
       },
+      createdAt: {
+        type: "date",
+        default: () => new Date(),
+      },
+      startDate: "date",
+      endDate: "date",
       events: {
         type: "list",
         objectType: "Event",
