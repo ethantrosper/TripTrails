@@ -1,51 +1,114 @@
-// import bcrypt from "bcryptjs";
-// import Realm from "realm";
+import bcryptjs from "bcryptjs";
+import { Realm } from "@realm/react";
+import { User } from "../models/User";
 
-// const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 10;
 
-// async function hashPassword(password) {
-//   const salt = await bcrypt.genSalt(SALT_ROUNDS);
-//   return await bcrypt.hash(password, salt);
-// }
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthenticationError";
+  }
+}
 
-// async function verifyPassword(plainPassword, hashedPassword) {
-//   return await bcrypt.compare(plainPassword, hashedPassword);
-// }
+export class AuthenticationService {
+  private realm: Realm;
 
-// const realm = new Realm({ schema: [UserSchema] });
+  constructor(realm: Realm) {
+    this.realm = realm;
+  }
 
-// async function saveUser(username, password) {
-//   const hashedPassword = await hashPassword(password);
-//   realm.write(() => {
-//     realm.create("User", { username, passwordHash: hashedPassword });
-//   });
-// }
+  private async hashPassword(password: string): Promise<string> {
+    return await bcryptjs.hash(password, SALT_ROUNDS);
+  }
 
-// function deriveEncryptionKey(password) {
-//   const key = bcrypt.hashSync(password, bcrypt.genSaltSync(SALT_ROUNDS));
-//   // Only take the first 64 bytes of the hash
-//   return new TextEncoder().encode(key).slice(0, 64);
-// }
+  private async verifyPassword(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcryptjs.compare(plainPassword, hashedPassword);
+  }
 
-// async function openEncryptedRealm(password) {
-//   const encryptionKey = deriveEncryptionKey(password);
+  async registerUser(username: string, password: string): Promise<User> {
+    const existingUser = this.realm
+      .objects<User>("User")
+      .filtered("username == $0", username)[0];
+    if (existingUser) {
+      throw new AuthenticationError("Username already exists");
+    }
 
-//   const realm = new Realm({
-//     schema: [UserSchema],
-//     encryptionKey: encryptionKey,
-//   });
+    if (password.length < 8) {
+      throw new AuthenticationError(
+        "Password must be at least 8 characters long",
+      );
+    }
 
-//   return realm;
-// }
+    const hashedPassword = await this.hashPassword(password);
 
-// async function login(username, password) {
-//   const user = realm.objects("User").filtered("username == $0", username)[0];
+    return new Promise((resolve, reject) => {
+      try {
+        let newUser: User;
+        this.realm.write(() => {
+          newUser = this.realm.create<User>("User", {
+            _id: new Realm.BSON.ObjectId(),
+            username,
+            password: hashedPassword,
+            createdAt: new Date(),
+            trips: [],
+          });
+        });
+        resolve(newUser!);
+      } catch (error) {
+        reject(new AuthenticationError("Failed to create user"));
+      }
+    });
+  }
 
-//   if (user && (await verifyPassword(password, user.passwordHash))) {
-//     // Password is correct, open the encrypted Realm
-//     const realm = await openEncryptedRealm(password);
-//     return realm;
-//   } else {
-//     throw new Error("Invalid credentials");
-//   }
-// }
+  async loginUser(username: string, password: string): Promise<User> {
+    const user = this.realm
+      .objects<User>("User")
+      .filtered("username == $0", username)[0];
+
+    if (!user) {
+      throw new AuthenticationError("User not found");
+    }
+
+    const isPasswordValid = await this.verifyPassword(password, user.password);
+    if (!isPasswordValid) {
+      throw new AuthenticationError("Invalid password");
+    }
+
+    return user;
+  }
+
+  async changePassword(
+    user: User,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const isPasswordValid = await this.verifyPassword(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new AuthenticationError("Current password is incorrect");
+    }
+
+    if (newPassword.length < 8) {
+      throw new AuthenticationError(
+        "New password must be at least 8 characters long",
+      );
+    }
+
+    const hashedPassword = await this.hashPassword(newPassword);
+
+    this.realm.write(() => {
+      user.password = hashedPassword;
+    });
+  }
+
+  // Helper method to get the currently logged-in user
+  getCurrentUser(userId: Realm.BSON.ObjectId): User | null {
+    return this.realm.objectForPrimaryKey<User>("User", userId);
+  }
+}
