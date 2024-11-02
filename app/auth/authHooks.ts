@@ -109,6 +109,21 @@ export const useAuth = () => {
     }
   };
 
+  const getCurrentUser = async () => {
+    const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
+    try {
+      if (storedUserId) {
+        const user = authService.getCurrentUser(
+          new Realm.BSON.ObjectId(storedUserId),
+        );
+
+        return user;
+      }
+    } catch (error) {
+      console.error("Error getting user:", error);
+    }
+  };
+
   return {
     currentUser,
     isLoading,
@@ -117,5 +132,6 @@ export const useAuth = () => {
     login,
     logout,
     changePassword,
+    getCurrentUser,
   };
 };

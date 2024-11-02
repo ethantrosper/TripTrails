@@ -27,6 +27,10 @@ Inserts a new user into the database.
   - `username` _(string, required)_: Username for the new user.
   - `password` _(string, required)_: Password for the new user.
 
+#### `getCurrentUser(): User`
+
+Gets the current user that is signed in from the database and returns it as an object `User`. This function is specifcally from useAuth from authHooks.ts
+
 ### Trip Functions
 
 #### `insertTrip(realm: Realm, user: User, title: string, location: string, startDate: Date, endDate: Date, description?: string, tripColor?: string): void`
