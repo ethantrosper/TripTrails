@@ -9,7 +9,26 @@ import { realmConfig } from "./config";
 let realm: Realm;
 
 export const initializeRealm = async () => {
-  realm = await Realm.open(realmConfig);
+  try {
+    if (!realm || realm.isClosed) {
+      realm = await Realm.open(realmConfig);
+    }
+    return realm;
+  } catch (error) {
+    console.error("Failed to initialize Realm:", error);
+    throw error;
+  }
+};
+
+export const getRealm = () => {
+  if (!realm) {
+    throw new Error(
+      "Realm has not been initialized. Call initializeRealm first.",
+    );
+  }
+  if (realm.isClosed) {
+    throw new Error("Realm is closed. You may need to reinitialize it.");
+  }
   return realm;
 };
 
@@ -57,7 +76,6 @@ export const insertUser = (
       reject(new Error("Username and password are required"));
       return;
     }
-
     try {
       realm.write(() => {
         const newUser = realm.create<User>("User", {

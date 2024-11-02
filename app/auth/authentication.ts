@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { Realm } from "@realm/react";
 import { User } from "../models/User";
+import { getRealm } from "../storage/storage";
 
 const SALT_ROUNDS = 10;
 
@@ -14,8 +15,8 @@ export class AuthenticationError extends Error {
 export class AuthenticationService {
   private realm: Realm;
 
-  constructor(realm: Realm) {
-    this.realm = realm;
+  constructor() {
+    this.realm = getRealm();
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -82,10 +83,18 @@ export class AuthenticationService {
   }
 
   async changePassword(
-    user: User,
+    username: string,
     currentPassword: string,
     newPassword: string,
   ): Promise<void> {
+    const user = this.realm
+      .objects<User>("User")
+      .filtered("username == $0", username)[0];
+
+    if (!user) {
+      throw new AuthenticationError("User not found");
+    }
+
     const isPasswordValid = await this.verifyPassword(
       currentPassword,
       user.password,

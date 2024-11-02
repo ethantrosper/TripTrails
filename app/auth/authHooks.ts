@@ -7,10 +7,10 @@ import { AuthenticationService, AuthenticationError } from "./authentication";
 
 const USER_ID_KEY = "USER_ID";
 
-export const useAuth = (realm: Realm) => {
+export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const authService = new AuthenticationService(realm);
+  const authService = new AuthenticationService();
 
   // Initialize auth state
   const initialize = useCallback(async () => {
@@ -31,7 +31,7 @@ export const useAuth = (realm: Realm) => {
     }
   }, [authService]);
 
-  const signup = async (username: string, password: string) => {
+  const signUp = async (username: string, password: string) => {
     try {
       setIsLoading(true);
       const user = await authService.registerUser(username, password);
@@ -86,20 +86,13 @@ export const useAuth = (realm: Realm) => {
   };
 
   const changePassword = async (
+    username: string,
     currentPassword: string,
     newPassword: string,
   ) => {
-    if (!currentUser) {
-      throw new AuthenticationError("No user is logged in");
-    }
-
     try {
       setIsLoading(true);
-      await authService.changePassword(
-        currentUser,
-        currentPassword,
-        newPassword,
-      );
+      await authService.changePassword(username, currentPassword, newPassword);
       Alert.alert("Success", "Password changed successfully");
     } catch (error) {
       if (error instanceof AuthenticationError) {
@@ -120,7 +113,7 @@ export const useAuth = (realm: Realm) => {
     currentUser,
     isLoading,
     initialize,
-    signup,
+    signUp,
     login,
     logout,
     changePassword,
