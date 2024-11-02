@@ -29,7 +29,7 @@ Inserts a new user into the database.
 
 #### `getCurrentUser(): User`
 
-Gets the current user that is signed in from the database and returns it as an object `User`. This function is specifcally from useAuth from authHooks.ts
+Gets the current user that is signed in from the database and returns it as a `User` object. This function is specifcally from useAuth from authHooks.ts
 
 ### Trip Functions
 
