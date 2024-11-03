@@ -7,6 +7,7 @@ import CreateAccountSuccessful from './CreateAccountSuccessful';
 import ResetPasswordViaEmail from './ResetPasswordViaEmail';
 import ResetPasswordViaPhone from './ResetPasswordViaPhone';
 import ResetNewPassword from './ResetNewPassword';
+import Dashboard from './Dashboard';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ const AppNavigator = () => {
       <Stack.Screen name='ResetPasswordViaEmail' component={ResetPasswordViaEmail} options={{ title: 'ResetPasswordViaEmail'}}/>
       <Stack.Screen name="ResetPasswordViaPhone" component={ResetPasswordViaPhone} options={{ title: 'ResetPasswordViaPhone' }} />
       <Stack.Screen name="ResetNewPassword" component={ResetNewPassword} options={{ title: 'ResetNewPassword' }} />
+      <Stack.Screen name='Dashboard' component={Dashboard} options={{title: 'Dashboard'}} />
       
     </Stack.Navigator>
   );

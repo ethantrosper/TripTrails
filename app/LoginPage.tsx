@@ -14,7 +14,16 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'password123') {
-      Alert.alert('Login Successful!', `Welcome, ${username}!`);
+      Alert.alert(
+        'Login Successful!',
+        `Welcome, ${username}!`,
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Dashboard'), // Navigate to Dashboard on OK
+          },
+        ]
+      );
     } else {
       Alert.alert('Login Failed', 'Invalid username or password.');
     }
