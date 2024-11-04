@@ -1,13 +1,32 @@
-import { useState, useCallback, useRef } from "react";
-import { Alert } from "react-native";
+// authHooks.ts
+
+import React, { useState, useCallback, useRef, createContext, useContext, useEffect } from "react";
+import { Alert, View, ActivityIndicator } from "react-native";
 import { Realm } from "@realm/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "../models/User";
 import { AuthenticationService, AuthenticationError } from "./authentication";
+import { initializeRealm, closeRealm } from "../storage/storage";
 
 const USER_ID_KEY = "USER_ID";
 
-export const useAuth = () => {
+type AuthContextType = {
+  currentUser: User | null;
+  isLoading: boolean;
+  signUp: (username: string, password: string) => Promise<User>;
+  login: (username: string, password: string) => Promise<User>;
+  logout: () => Promise<void>;
+  changePassword: (
+    username: string,
+    currentPassword: string,
+    newPassword: string,
+  ) => Promise<void>;
+  getCurrentUser: () => Promise<User | null>;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const authServiceRef = useRef<AuthenticationService | null>(null);
@@ -34,6 +53,23 @@ export const useAuth = () => {
       setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const realm = await initializeRealm();
+        await initialize(realm);
+      } catch (error) {
+        console.error("Failed to initialize Realm:", error);
+      }
+    };
+
+    initializeAuth();
+
+    return () => {
+      closeRealm();
+    };
+  }, [initialize]);
 
   const signUp = async (username: string, password: string) => {
     try {
@@ -144,14 +180,34 @@ export const useAuth = () => {
     }
   };
 
-  return {
-    currentUser,
-    isLoading,
-    initialize,
-    signUp,
-    login,
-    logout,
-    changePassword,
-    getCurrentUser,
-  };
+  if (isLoading) {
+    // Show loading indicator or return null
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  return (
+    <AuthContext.Provider value={{
+      currentUser,
+      isLoading,
+      signUp,
+      login,
+      logout,
+      changePassword,
+      getCurrentUser,
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
