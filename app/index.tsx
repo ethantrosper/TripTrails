@@ -8,24 +8,38 @@ import { useAuth } from "./auth/authHooks";
 import { ActivityIndicator, View } from "react-native";
 
 const App = () => {
-  const { initialize } = useAuth();
+  const { initialize, isInitialized } = useAuth();
 
   useEffect(() => {
+    let mounted = true;
+
     const setupApp = async () => {
       try {
         const realm = await initializeRealm();
-        initialize(realm);
+        if (mounted) {
+          await initialize(realm);
+          console.log("App initialization complete");
+        }
       } catch (error) {
-        console.error("Failed to initialize Realm:", error);
+        console.error("Failed to initialize app:", error);
       }
     };
 
     setupApp();
 
     return () => {
+      mounted = false;
       closeRealm();
     };
   }, [initialize]);
+
+  if (!isInitialized) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <RealmProvider {...realmConfig}>

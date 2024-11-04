@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Alert } from "react-native";
 import { Realm } from "@realm/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,44 +7,100 @@ import { AuthenticationService, AuthenticationError } from "./authentication";
 
 const USER_ID_KEY = "USER_ID";
 
+// Create a singleton instance of the auth service
+let globalAuthService: AuthenticationService | null = null;
+
 export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const authServiceRef = useRef<AuthenticationService | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const initializeStartedRef = useRef(false);
 
   // Initialize auth state
   const initialize = useCallback(async (realm: Realm) => {
-    try {
-      if (!authServiceRef.current) {
-        authServiceRef.current = new AuthenticationService(realm);
+    if (initializeStartedRef.current) {
+      console.log("Initialization already started, skipping...");
+      return;
+    }
 
-        const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
-        if (storedUserId) {
-          const user = authServiceRef.current.getCurrentUser(
-            new Realm.BSON.ObjectId(storedUserId),
-          );
-          if (user) {
-            setCurrentUser(user);
-          }
+    try {
+      console.log("Starting initialization...");
+      initializeStartedRef.current = true;
+
+      // Create the global auth service if it doesn't exist
+      if (!globalAuthService) {
+        globalAuthService = new AuthenticationService(realm);
+        console.log("Auth service created:", globalAuthService);
+      }
+
+      const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
+      if (storedUserId) {
+        const user = globalAuthService.getCurrentUser(
+          new Realm.BSON.ObjectId(storedUserId),
+        );
+        if (user) {
+          setCurrentUser(user);
         }
       }
+
+      setIsInitialized(true);
+      console.log(
+        "Initialization complete. Auth service status:",
+        Boolean(globalAuthService),
+      );
     } catch (error) {
       console.error("Error initializing auth:", error);
+      setIsInitialized(false);
+      initializeStartedRef.current = false;
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const signUp = async (username: string, password: string) => {
+  const login = useCallback(
+    async (username: string, password: string) => {
+      console.log("Login attempt - Auth state:", {
+        isInitialized,
+        hasAuthService: Boolean(globalAuthService),
+      });
+
+      if (!globalAuthService) {
+        throw new Error(
+          "Authentication service not initialized. Please try again.",
+        );
+      }
+
+      try {
+        setIsLoading(true);
+        const user = await globalAuthService.loginUser(username, password);
+        await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
+        setCurrentUser(user);
+        return user;
+      } catch (error) {
+        if (error instanceof AuthenticationError) {
+          Alert.alert("Login Error", error.message);
+        } else {
+          Alert.alert("Error", "An unexpected error occurred during login");
+          console.error("Login error:", error);
+        }
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isInitialized],
+  );
+
+  const signUp = useCallback(async (username: string, password: string) => {
+    if (!globalAuthService) {
+      throw new Error(
+        "Authentication service not initialized. Please try again.",
+      );
+    }
+
     try {
       setIsLoading(true);
-      if (!authServiceRef.current) {
-        throw new Error("Authentication service not initialized");
-      }
-      const user = await authServiceRef.current.registerUser(
-        username,
-        password,
-      );
+      const user = await globalAuthService.registerUser(username, password);
       await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
       setCurrentUser(user);
       return user;
@@ -56,36 +112,15 @@ export const useAuth = () => {
           "Error",
           "An unexpected error occurred during registration",
         );
+        console.error("Registration error:", error);
       }
       throw error;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const login = async (username: string, password: string) => {
-    try {
-      setIsLoading(true);
-      if (!authServiceRef.current) {
-        throw new Error("Authentication service not initialized");
-      }
-      const user = await authServiceRef.current.loginUser(username, password);
-      await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
-      setCurrentUser(user);
-      return user;
-    } catch (error) {
-      if (error instanceof AuthenticationError) {
-        Alert.alert("Login Error", error.message);
-      } else {
-        Alert.alert("Error", "An unexpected error occurred during login");
-      }
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       setIsLoading(true);
       await AsyncStorage.removeItem(USER_ID_KEY);
@@ -96,7 +131,15 @@ export const useAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Cleanup function
+  useEffect(() => {
+    return () => {
+      // Don't cleanup globalAuthService here as it needs to persist
+      initializeStartedRef.current = false;
+    };
+  }, []);
 
   const changePassword = async (
     username: string,
@@ -105,10 +148,10 @@ export const useAuth = () => {
   ) => {
     try {
       setIsLoading(true);
-      if (!authServiceRef.current) {
+      if (!globalAuthService) {
         throw new Error("Authentication service not initialized");
       }
-      await authServiceRef.current.changePassword(
+      await globalAuthService.changePassword(
         username,
         currentPassword,
         newPassword,
@@ -132,8 +175,8 @@ export const useAuth = () => {
   const getCurrentUser = async () => {
     try {
       const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
-      if (storedUserId && authServiceRef.current) {
-        return authServiceRef.current.getCurrentUser(
+      if (storedUserId && globalAuthService) {
+        return globalAuthService.getCurrentUser(
           new Realm.BSON.ObjectId(storedUserId),
         );
       }
@@ -147,6 +190,7 @@ export const useAuth = () => {
   return {
     currentUser,
     isLoading,
+    isInitialized,
     initialize,
     signUp,
     login,
