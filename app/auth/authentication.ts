@@ -1,4 +1,4 @@
-import bcryptjs from "bcryptjs";
+import bcryptjs from "react-native-bcrypt";
 import { Realm } from "@realm/react";
 import { User } from "../models/User";
 import { getRealm } from "../storage/storage";
@@ -18,16 +18,34 @@ export class AuthenticationService {
   constructor(realm: Realm) {
     this.realm = realm;
   }
+  
+  // authentication.ts
 
-  private async hashPassword(password: string): Promise<string> {
-    return await bcryptjs.hash(password, SALT_ROUNDS);
+  private hashPassword(password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      bcryptjs.hash(password, SALT_ROUNDS, (err, hash) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(hash);
+        }
+      });
+    });
   }
 
-  private async verifyPassword(
+  private verifyPassword(
     plainPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return await bcryptjs.compare(plainPassword, hashedPassword);
+    return new Promise((resolve, reject) => {
+      bcryptjs.compare(plainPassword, hashedPassword, (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
   }
 
   async registerUser(username: string, password: string): Promise<User> {
