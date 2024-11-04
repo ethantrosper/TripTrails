@@ -7,7 +7,6 @@ import { AuthenticationService, AuthenticationError } from "./authentication";
 
 const USER_ID_KEY = "USER_ID";
 
-// Create a singleton instance of the auth service
 let globalAuthService: AuthenticationService | null = null;
 
 export const useAuth = () => {
@@ -27,7 +26,6 @@ export const useAuth = () => {
       console.log("Starting initialization...");
       initializeStartedRef.current = true;
 
-      // Create the global auth service if it doesn't exist
       if (!globalAuthService) {
         globalAuthService = new AuthenticationService(realm);
         console.log("Auth service created:", globalAuthService);
@@ -133,7 +131,7 @@ export const useAuth = () => {
     }
   }, []);
 
-  // Cleanup function
+  // Cleanup
   useEffect(() => {
     return () => {
       // Don't cleanup globalAuthService here as it needs to persist
