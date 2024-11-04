@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-nat
 import { useNavigation } from '@react-navigation/native';
 import LoginPageStyles from './LoginPageStyle';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from './auth/authHooks';
 
 const logoImage = require('../assets/images/app-logo.png');
 
@@ -11,14 +12,20 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { login, signUp, getCurrentUser } = useAuth();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    const usersign = await signUp('admin', 'password123');
     if (username === 'admin' && password === 'password123') {
-      Alert.alert('Login Successful!', `Welcome, ${username}!`);
+      //Alert.alert('Login Successful!', `Welcome, ${username}!`);
+      const user = await login(username, password);
+      const currUser = await getCurrentUser();
+      console.log(currUser);
     } else {
       Alert.alert('Login Failed', 'Invalid username or password.');
     }
   };
+
 
   return (
     <View style={LoginPageStyles.container}>
