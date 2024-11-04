@@ -11,10 +11,7 @@ const dateToDateArray = (date: Date): DateArray => [
   date.getMinutes(),
 ];
 
-export const shareEventsAsICS = async (
-  events: Event[],
-  filename = "events.ics",
-): Promise<void> => {
+export const shareEventsAsICS = async (events: Event[]): Promise<void> => {
   try {
     const isSharingAvailable = await Sharing.isAvailableAsync();
     if (!isSharingAvailable) {
@@ -86,6 +83,7 @@ export const shareEventsAsICS = async (
     }
 
     // Write the ICS content to a file
+    const filename = "events.ics";
     const filePath = `${FileSystem.cacheDirectory}${filename}`;
     await FileSystem.writeAsStringAsync(filePath, value);
 
