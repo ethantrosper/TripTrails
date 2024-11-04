@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Alert } from "react-native";
 import { Realm } from "@realm/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,18 +10,22 @@ const USER_ID_KEY = "USER_ID";
 export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const authService = new AuthenticationService();
+  const authServiceRef = useRef<AuthenticationService | null>(null);
 
   // Initialize auth state
-  const initialize = useCallback(async () => {
+  const initialize = useCallback(async (realm: Realm) => {
     try {
-      const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
-      if (storedUserId) {
-        const user = authService.getCurrentUser(
-          new Realm.BSON.ObjectId(storedUserId),
-        );
-        if (user) {
-          setCurrentUser(user);
+      if (!authServiceRef.current) {
+        authServiceRef.current = new AuthenticationService(realm);
+
+        const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
+        if (storedUserId) {
+          const user = authServiceRef.current.getCurrentUser(
+            new Realm.BSON.ObjectId(storedUserId),
+          );
+          if (user) {
+            setCurrentUser(user);
+          }
         }
       }
     } catch (error) {
@@ -29,12 +33,18 @@ export const useAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [authService]);
+  }, []);
 
   const signUp = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      const user = await authService.registerUser(username, password);
+      if (!authServiceRef.current) {
+        throw new Error("Authentication service not initialized");
+      }
+      const user = await authServiceRef.current.registerUser(
+        username,
+        password,
+      );
       await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
       setCurrentUser(user);
       return user;
@@ -56,7 +66,10 @@ export const useAuth = () => {
   const login = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      const user = await authService.loginUser(username, password);
+      if (!authServiceRef.current) {
+        throw new Error("Authentication service not initialized");
+      }
+      const user = await authServiceRef.current.loginUser(username, password);
       await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
       setCurrentUser(user);
       return user;
@@ -92,7 +105,14 @@ export const useAuth = () => {
   ) => {
     try {
       setIsLoading(true);
-      await authService.changePassword(username, currentPassword, newPassword);
+      if (!authServiceRef.current) {
+        throw new Error("Authentication service not initialized");
+      }
+      await authServiceRef.current.changePassword(
+        username,
+        currentPassword,
+        newPassword,
+      );
       Alert.alert("Success", "Password changed successfully");
     } catch (error) {
       if (error instanceof AuthenticationError) {
@@ -110,17 +130,17 @@ export const useAuth = () => {
   };
 
   const getCurrentUser = async () => {
-    const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
     try {
-      if (storedUserId) {
-        const user = authService.getCurrentUser(
+      const storedUserId = await AsyncStorage.getItem(USER_ID_KEY);
+      if (storedUserId && authServiceRef.current) {
+        return authServiceRef.current.getCurrentUser(
           new Realm.BSON.ObjectId(storedUserId),
         );
-
-        return user;
       }
+      return null;
     } catch (error) {
       console.error("Error getting user:", error);
+      return null;
     }
   };
 

@@ -71,15 +71,7 @@ const AppStack = () => {
 
 // Determines whether the user is logged in or not, if yes then goes to the Dashboard, if not then goes to the login.
 const AppNavigator = () => {
-  const { currentUser, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  const { currentUser } = useAuth();
 
   return currentUser ? <AppStack /> : <AuthStack />;
 };

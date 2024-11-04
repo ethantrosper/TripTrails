@@ -3,20 +3,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./AppNavigator";
 import { RealmProvider } from "@realm/react";
 import { realmConfig } from "./storage/config";
-import { initializeRealm, closeRealm, getRealm } from "./storage/storage";
+import { initializeRealm, closeRealm } from "./storage/storage";
 import { useAuth } from "./auth/authHooks";
 import { ActivityIndicator, View } from "react-native";
 
 const App = () => {
-  const [isRealmInitialized, setIsRealmInitialized] = useState(false);
-  const { initialize, isLoading } = useAuth();
+  const { initialize } = useAuth();
 
   useEffect(() => {
     const setupApp = async () => {
       try {
-        await initializeRealm();
-        initialize();
-        setIsRealmInitialized(true);
+        const realm = await initializeRealm();
+        initialize(realm);
       } catch (error) {
         console.error("Failed to initialize Realm:", error);
       }
@@ -28,14 +26,6 @@ const App = () => {
       closeRealm();
     };
   }, [initialize]);
-
-  if (!isRealmInitialized || isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   return (
     <RealmProvider {...realmConfig}>

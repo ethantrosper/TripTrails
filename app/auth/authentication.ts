@@ -15,8 +15,8 @@ export class AuthenticationError extends Error {
 export class AuthenticationService {
   private realm: Realm;
 
-  constructor() {
-    this.realm = getRealm();
+  constructor(realm: Realm) {
+    this.realm = realm;
   }
 
   private async hashPassword(password: string): Promise<string> {
