@@ -64,7 +64,7 @@ const Confirm = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Add Event Successfully!</Text>
+      <Text style={styles.header}>Add Trip Successfully!</Text>
       <View style={styles.sectionContainer}>
         <Text style={styles.label}>Trip Name:</Text>
         <Text style={styles.value}>{tripName}</Text>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   button: {
-    backgroundColor: '#AA7BCC',
+    backgroundColor: '#5A5260',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
