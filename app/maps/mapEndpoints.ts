@@ -17,6 +17,25 @@ interface Place {
   user_ratings_total?: number;
 }
 
+export interface SearchResult {
+  name: string;
+  formatted_address: string;
+  place_id: string;
+  rating?: number;
+  user_ratings_total?: number;
+  opening_hours?: {
+    open_now: boolean;
+  };
+  price_level?: number;
+  types?: string[];
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
 export const getCoordinates = async (
   placeName: string,
 ): Promise<Coordinates | null> => {
@@ -101,6 +120,52 @@ export const getRecommendations = async (
   }
 };
 
+export const searchLocations = async (
+  search: string,
+  location: string,
+  limit: number = 5,
+): Promise<SearchResult[]> => {
+  try {
+    const searchQuery = `${search} in ${location}`;
+
+    const API_KEY = process.env.GOOGLE_MAP_KEY;
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+      searchQuery,
+    )}&key=${API_KEY}`;
+
+    const response = await axios.get(url);
+
+    if (!response.data.results || response.data.results.length === 0) {
+      console.log("No results found for:", searchQuery);
+      return [];
+    }
+
+    // Process and format the results
+    const results = response.data.results.slice(0, limit).map(
+      (place: any): SearchResult => ({
+        name: place.name,
+        formatted_address: place.formatted_address,
+        place_id: place.place_id,
+        rating: place.rating,
+        user_ratings_total: place.user_ratings_total,
+        opening_hours: place.opening_hours,
+        price_level: place.price_level,
+        types: place.types,
+        geometry: {
+          location: {
+            lat: place.geometry.location.lat,
+            lng: place.geometry.location.lng,
+          },
+        },
+      }),
+    );
+
+    return results;
+  } catch (error) {
+    console.error("Error searching locations:", error);
+    return [];
+  }
+};
 export const formatGoogleMapUrl = (location: string): string => {
   let url = `https://maps.google.com/?q=`;
   url += location.replace(/[^a-zA-Z0-9]/g, "+").replace(/\++/g, "+");
