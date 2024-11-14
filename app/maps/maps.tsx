@@ -40,7 +40,6 @@ interface MapProps {
 }
 
 export const GoogleMapButton = (props: MapProps) => {
-  //   const [coordinates, setCoordinates] = useState(null);
   const [mapUrl, setMapUrl] = useState("");
 
   useEffect(() => {
@@ -62,8 +61,6 @@ export const GoogleMapButton = (props: MapProps) => {
       if (canOpen) {
         await Linking.openURL(mapUrl);
       } else {
-        // Handle case where Google Maps isn't installed
-        // You might want to show an alert or open in browser instead
         if (props.placeName) {
           const browserUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.placeName)}`;
           await Linking.openURL(browserUrl);
@@ -71,7 +68,6 @@ export const GoogleMapButton = (props: MapProps) => {
       }
     } catch (error) {
       console.error("Error opening Google Maps:", error);
-      // You might want to show an error message to the user here
     }
   };
 
