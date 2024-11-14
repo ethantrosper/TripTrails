@@ -5,19 +5,7 @@ interface Coordinates {
   longitude: number;
 }
 
-interface Place {
-  name: string;
-  rating?: number;
-  vicinity: string;
-  place_id: string;
-  opening_hours?: {
-    open_now: boolean;
-  };
-  price_level?: number;
-  user_ratings_total?: number;
-}
-
-export interface SearchResult {
+interface Location {
   name: string;
   formatted_address: string;
   place_id: string;
@@ -28,7 +16,7 @@ export interface SearchResult {
   };
   price_level?: number;
   types?: string[];
-  geometry: {
+  geometry?: {
     location: {
       lat: number;
       lng: number;
@@ -63,16 +51,14 @@ export const getRecommendations = async (
   location: string,
   category: string,
   limit: number = 10,
-): Promise<Place[]> => {
+): Promise<Location[]> => {
   try {
-    // First get coordinates for the location
     const coordinates = await getCoordinates(location);
 
     if (!coordinates) {
       throw new Error("Could not get coordinates for the location");
     }
 
-    // Types mapping for common categories
     const categoryMapping: { [key: string]: string } = {
       restaurants: "restaurant",
       entertainment: "amusement_park|movie_theater|casino|bowling_alley",
@@ -87,31 +73,28 @@ export const getRecommendations = async (
     const mappedCategory = categoryMapping[category.toLowerCase()] || category;
 
     const API_KEY = process.env.GOOGLE_MAP_KEY;
-    const radius = 5000; // 5km radius
+    const radius = 5000;
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${coordinates.latitude},${coordinates.longitude}&radius=${radius}&type=${mappedCategory}&key=${API_KEY}`;
 
     const response = await axios.get(url);
-
-    console.log(response.data);
 
     if (!response.data.results) {
       throw new Error("No results found");
     }
 
-    // Process and format the results
     const places = response.data.results.slice(0, limit).map(
-      (place: any): Place => ({
+      (place: any): Location => ({
         name: place.name,
-        rating: place.rating,
-        vicinity: place.vicinity,
+        formatted_address: place.vicinity,
         place_id: place.place_id,
+        rating: place.rating,
         opening_hours: place.opening_hours,
         price_level: place.price_level,
         user_ratings_total: place.user_ratings_total,
+        types: place.types,
+        geometry: place.geometry,
       }),
     );
-
-    console.log("Places: ", places);
 
     return places;
   } catch (error) {
@@ -124,7 +107,7 @@ export const searchLocations = async (
   search: string,
   location: string,
   limit: number = 5,
-): Promise<SearchResult[]> => {
+): Promise<Location[]> => {
   try {
     const searchQuery = `${search} in ${location}`;
 
@@ -142,7 +125,7 @@ export const searchLocations = async (
 
     // Process and format the results
     const results = response.data.results.slice(0, limit).map(
-      (place: any): SearchResult => ({
+      (place: any): Location => ({
         name: place.name,
         formatted_address: place.formatted_address,
         place_id: place.place_id,
