@@ -1,3 +1,16 @@
+// Dashboard.tsx
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const Dashboard: React.FC = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Dashboard Page</Text>
+    </View>
+  );
+};
+
+/*
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from 'react-native-calendars';
@@ -5,17 +18,18 @@ import { Calendar } from 'react-native-calendars';
 export default function Dashboard() {
   return (
     <SafeAreaView style={styles.container}>
-      {/* ScrollView for scrollable content */}
+    // ScrollView for scrollable content
+      {}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Title in the upper left corner */}
+        {/* Title in the upper left corner }
         <Text style={styles.h1}>Welcome to TripTrails!</Text>
 
-        {/* Subtitle */}
+        {/* Subtitle }
         <Text style={styles.h2}>
           Your New Adventure Starts Here!
         </Text>
 
-        {/* Calendar Component */}
+        {/* Calendar Component }
         <View style={styles.calendarContainer}>
           <Calendar
             current={new Date().toISOString().split('T')[0]}
@@ -29,7 +43,7 @@ export default function Dashboard() {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation - Fixed at the bottom */}
+      {/* Bottom Navigation - Fixed at the bottom }
       <View style={styles.bottomNavContainer}>
         <TouchableOpacity style={styles.navButton}>
           <Text style={styles.navText}>Dashboard</Text>
@@ -50,10 +64,14 @@ export default function Dashboard() {
     </SafeAreaView>
   );
 }
+*/
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: "#ecf0f1",
     padding: 8,
   },
@@ -106,3 +124,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+export default Dashboard;
+

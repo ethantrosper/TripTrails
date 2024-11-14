@@ -11,9 +11,10 @@ import { AuthProvider } from "./auth/authHooks";
 const App = () => {
   return (
     <View style={{ flex: 1 }}>
-      <AddEvent />
+      <AppNavigator/>
     </View>
   );
+}
 }
 */
 
@@ -30,4 +31,3 @@ const App = () => {
 };
 
 export default App;
-

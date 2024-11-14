@@ -283,14 +283,14 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     flex: 1,
-    backgroundColor: '#AA7BCC',
+    backgroundColor: '#5A5260',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginHorizontal: 100,
   },
   button: {
-    backgroundColor: '#AA7BCC',
+    backgroundColor: '#5A5260',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',

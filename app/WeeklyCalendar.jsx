@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   highlightedDayHeaderCell: {
-    backgroundColor: '#AA7BCC',
+    backgroundColor: '#5A5260',
   },
   headerText: {
     fontWeight: 'bold',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   highlightedCell: {
-    borderColor: '#AA7BCC',
+    borderColor: '#5A5260',
     borderWidth: 2,
   },
 });
