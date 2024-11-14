@@ -166,8 +166,8 @@ export const updateTrip = (
   });
 };
 
-export const getAllUserTrips = (user: User): Realm.List<Trip> => {
-  return user.trips;
+export const getAllUserTrips = (user: User): Trip[] => {
+  return [...user.trips];
 };
 
 export const getTrip = (trip: Trip): Trip | null => {
@@ -266,8 +266,8 @@ export const updateEvent = (
   });
 };
 
-export const getAllTripEvents = (trip: Trip): Realm.List<Event> => {
-  return trip.events;
+export const getAllTripEvents = (trip: Trip): Event[] => {
+  return [...trip.events];
 };
 
 export const getEvent = (event: Event): Event | null => {
