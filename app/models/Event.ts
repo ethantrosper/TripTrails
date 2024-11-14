@@ -2,6 +2,7 @@ import Realm, { ObjectSchema } from "realm";
 
 export class Event extends Realm.Object<Event> {
   _id!: Realm.BSON.ObjectId;
+  title!: string;
   description?: string;
   note?: string;
   location!: string;
@@ -24,6 +25,7 @@ export class Event extends Realm.Object<Event> {
         type: "objectId",
         default: () => new Realm.BSON.ObjectId(),
       },
+      title: "string",
       description: "string?",
       note: "string?",
       location: "string",

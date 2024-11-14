@@ -186,6 +186,7 @@ export const deleteTrip = (trip: Trip) => {
 export const insertEvent = (
   realm: Realm,
   trip: Trip,
+  title: string, // required
   location: string, // required
   eventDate: Date, // required
   eventTimeStart?: Date, // optional
@@ -206,6 +207,7 @@ export const insertEvent = (
       realm.write(() => {
         const newEvent = realm.create<Event>("Event", {
           _id: new Realm.BSON.ObjectId(),
+          title,
           location,
           eventDate,
           eventTimeStart,
