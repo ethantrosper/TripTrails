@@ -15,15 +15,9 @@ const LoginPage = () => {
   const { login, signUp, getCurrentUser } = useAuth();
 
   const handleLogin = async () => {
-    if (username === 'admin' && password === 'Password123') {
-      //Alert.alert('Login Successful!', `Welcome, ${username}!`);
       const user = await login(username, password);
       const currUser = await getCurrentUser();
-      
       console.log(currUser);
-    } else {
-      Alert.alert('Login Failed', 'Invalid username or password.');
-    }
   };
 
 
