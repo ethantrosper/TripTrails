@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 
-export default function Recommendation() {
+const Recommendation: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* Top Tab Navigation */}
@@ -70,7 +70,7 @@ export default function Recommendation() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

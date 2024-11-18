@@ -3,9 +3,10 @@ import { Trip } from "./Trip";
 
 export class User extends Realm.Object<User> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
-  Trips!: Trip[];
+  username!: string;
+  password!: string;
+  trips!: Realm.List<Trip>;
   createdAt: Date = new Date();
-  updatedAt: Date = new Date();
 
   static primaryKey = "_id";
   static schema: ObjectSchema = {
@@ -13,19 +14,12 @@ export class User extends Realm.Object<User> {
     primaryKey: "_id",
     properties: {
       _id: "objectId",
-      description: "string",
-      createdAt: {
-        type: "date",
-        default: new Date(),
-      },
-      updatedAt: {
-        type: "date",
-        default: new Date(),
-      },
-      isComplete: {
-        type: "bool",
-        default: false,
-        indexed: true,
+      createdAt: "date",
+      username: "string",
+      password: "string",
+      trips: {
+        type: "list",
+        objectType: "Trip",
       },
     },
   };

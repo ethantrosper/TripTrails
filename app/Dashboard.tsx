@@ -3,8 +3,7 @@ import { StyleSheet, SafeAreaView, ScrollView, Text, View, TouchableOpacity } fr
 import { Calendar } from 'react-native-calendars';
 import { useRouter } from 'expo-router';
 
-export default function Dashboard() {
-  const router = useRouter();
+const Dashboard: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* ScrollView for scrollable content */}
@@ -30,35 +29,16 @@ export default function Dashboard() {
           />
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation - Fixed at the bottom */}
-      <View style={styles.bottomNavContainer}>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navText}>Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => router.push("/Recommendation")} // Navigate to the Recommendation page
-        >
-          <Text style={styles.navText}>Recommend</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navText}>Add Trip</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navText}>Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: "#ecf0f1",
     padding: 8,
   },
@@ -111,3 +91,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+export default Dashboard;
+
