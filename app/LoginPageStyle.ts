@@ -73,13 +73,15 @@ const LoginPageStyles = StyleSheet.create({
     fontSize: 16,
   },
   footer: {
+    position: 'relative',
+    bottom: 20,
+    top:20,
+    left: 0,
+    right: 0,
     backgroundColor: '#f0f0f0',
     padding: 10,
     borderRadius: 5,
-    width: '100%',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 30,
   },
   footerText: {
     fontSize: 16,
