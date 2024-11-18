@@ -1,6 +1,13 @@
 // authHooks.ts
 
-import React, { useState, useCallback, useRef, createContext, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  createContext,
+  useContext,
+  useEffect,
+} from "react";
 import { Alert, View, ActivityIndicator } from "react-native";
 import { Realm } from "@realm/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -71,7 +78,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [initialize]);
 
-  const signUp = async (username: string, password: string) => {
+  const signUp = async (
+    username: string,
+    password: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+  ) => {
     try {
       setIsLoading(true);
       if (!authServiceRef.current) {
@@ -80,6 +93,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const user = await authServiceRef.current.registerUser(
         username,
         password,
+        email,
+        firstName,
+        lastName,
       );
       await AsyncStorage.setItem(USER_ID_KEY, user._id.toString());
       setCurrentUser(user);
@@ -190,15 +206,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{
-      currentUser,
-      isLoading,
-      signUp,
-      login,
-      logout,
-      changePassword,
-      getCurrentUser,
-    }}>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        isLoading,
+        signUp,
+        login,
+        logout,
+        changePassword,
+        getCurrentUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

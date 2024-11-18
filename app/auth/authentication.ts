@@ -18,7 +18,7 @@ export class AuthenticationService {
   constructor(realm: Realm) {
     this.realm = realm;
   }
-  
+
   // authentication.ts
 
   private hashPassword(password: string): Promise<string> {
@@ -48,7 +48,13 @@ export class AuthenticationService {
     });
   }
 
-  async registerUser(username: string, password: string): Promise<User> {
+  async registerUser(
+    username: string,
+    password: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<User> {
     const existingUser = this.realm
       .objects<User>("User")
       .filtered("username == $0", username)[0];
@@ -72,6 +78,9 @@ export class AuthenticationService {
             _id: new Realm.BSON.ObjectId(),
             username,
             password: hashedPassword,
+            email,
+            firstName,
+            lastName,
             createdAt: new Date(),
             trips: [],
           });

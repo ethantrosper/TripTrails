@@ -5,6 +5,9 @@ export class User extends Realm.Object<User> {
   _id: Realm.BSON.ObjectId = new Realm.BSON.ObjectId();
   username!: string;
   password!: string;
+  email!: string;
+  firstName!: string;
+  lastName!: string;
   trips!: Realm.List<Trip>;
   createdAt: Date = new Date();
 
@@ -17,6 +20,9 @@ export class User extends Realm.Object<User> {
       createdAt: "date",
       username: "string",
       password: "string",
+      email: "string",
+      firstName: "string",
+      lastName: "string",
       trips: {
         type: "list",
         objectType: "Trip",
