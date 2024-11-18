@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from './auth/authHooks';
 
 const SignUpPage = () => {
+  const { login, signUp, getCurrentUser } = useAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
@@ -17,11 +19,13 @@ const SignUpPage = () => {
     return hasUpperCase && hasLowerCase && hasNumber && minLength;
   };
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     if (validatePassword(password)) {
+      //Test for now
+      const user = await signUp('admin', 'Password123');
       navigation.navigate('CreateAccountSuccessful');
     } else {
-      // alert('Password does not meet the requirements. Please try again.');
+      alert('Password does not meet the requirements. Please try again.');
       navigation.navigate('CreateAccountSuccessful');
     }
   };
