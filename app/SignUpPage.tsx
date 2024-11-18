@@ -8,6 +8,11 @@ const SignUpPage = () => {
   const { login, signUp, getCurrentUser } = useAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const navigation = useNavigation();
 
   const validatePassword = (password) => {
@@ -20,13 +25,23 @@ const SignUpPage = () => {
   };
 
   const handleCreateAccount = async () => {
-    if (validatePassword(password)) {
-      //Test for now
-      const user = await signUp('admin', 'Password123');
-      navigation.navigate('CreateAccountSuccessful');
-    } else {
-      alert('Password does not meet the requirements. Please try again.');
-      navigation.navigate('CreateAccountSuccessful');
+    if (!validatePassword(password)) {
+      alert('Password does not meet the requirements.');
+      return;
+    }
+    //TODO: Add these variables to the Auth SignUp api
+    if (!firstName || !lastName || !username || !email || !phone) {
+      alert('Please fill out all fields.');
+      return;
+    }
+
+    try {
+      const user = await signUp(username, password);
+      if (user) {
+        navigation.navigate('CreateAccountSuccessful');
+      }
+    } catch (error) {
+      alert('Error creating account. Please try again.');
     }
   };
 
@@ -39,30 +54,50 @@ const SignUpPage = () => {
       <View style={styles.rowContainer}>
         <View style={styles.inputContainerHalf}>
           <Text style={styles.label}>First name</Text>
-          <TextInput style={[styles.input, styles.halfWidth]} />
+          <TextInput 
+            style={[styles.input, styles.halfWidth]} 
+            value={firstName}
+            onChangeText={setFirstName}
+          />
         </View>
         <View style={styles.inputContainerHalf}>
           <Text style={styles.label}>Last name</Text>
-          <TextInput style={[styles.input, styles.halfWidth]} />
+          <TextInput 
+            style={[styles.input, styles.halfWidth]}
+            value={lastName}
+            onChangeText={setLastName}
+          />
         </View>
       </View>
 
       {/* Username Input --- Username */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Username</Text>
-        <TextInput style={styles.input} />
+        <TextInput 
+          style={styles.input} 
+          value={username}
+          onChangeText={setUsername}  
+        />
       </View>
 
       {/* Username Input --- Email Address */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email address</Text>
-        <TextInput style={styles.input} keyboardType="email-address" />
+        <TextInput 
+          style={styles.input} keyboardType="email-address" 
+          value={email}
+          onChangeText={setEmail}  
+        />
       </View>
 
       {/* Username Input --- Phone# */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Phone number</Text>
-        <TextInput style={styles.input} keyboardType="phone-pad" />
+        <TextInput 
+          style={styles.input} keyboardType="phone-pad" 
+          value={phone}
+          onChangeText={setPhone}  
+        />
       </View>
 
       {/* Username Input -- Account Password*/}
