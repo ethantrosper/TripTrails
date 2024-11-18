@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Calendar } from 'react-native-calendars';
+import { useRouter } from 'expo-router';
 
 const Dashboard: React.FC = () => {
   return (
