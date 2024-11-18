@@ -11,6 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import WeeklyCalendar from './WeeklyCalendar';
+import Confirm from './Confirm';
 
 const AddEvent = () => {
   const navigation = useNavigation();
