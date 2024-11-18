@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Text, View, Image, TouchableOpacity, TextInput, Alert } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useAuth } from './auth/authHooks';
 
 export default function Profile() {
   const [name, setName] = useState("John Doe");
@@ -8,6 +9,7 @@ export default function Profile() {
   const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
   const [email, setEmail] = useState("johndoe@example.com");
   const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const { logout } = useAuth();
 
   // Generate the last 5 years in descending order
   const getLastFiveYears = () => {
@@ -130,7 +132,7 @@ export default function Profile() {
           <TouchableOpacity style={styles.settingButton}>
             <Text style={styles.settingText}>Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity onPress={logout} style={styles.settingButton}>
             <Text style={styles.settingText}>Log Out</Text>
           </TouchableOpacity>
         </View>
