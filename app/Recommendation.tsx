@@ -45,29 +45,6 @@ const Recommendation: React.FC = () => {
           </View>
         ))}
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Text>🏠</Text>
-          <Text style={styles.navText}>Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text>⭐</Text>
-          <Text style={styles.navText}>Recommend</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addButtonMain}>
-          <Text style={styles.addButtonMainText}>+</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text>🔍</Text>
-          <Text style={styles.navText}>Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text>👤</Text>
-          <Text style={styles.navText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -178,3 +155,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
+export default Recommendation
