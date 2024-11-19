@@ -25,7 +25,9 @@ const Stack = createStackNavigator();
 // Pages for the login/registration pages
 const AuthStack = () => {
   return (
-    <Stack.Navigator initialRouteName="LoginPage">
+    <Stack.Navigator initialRouteName="LoginPage"
+      screenOptions={{headerShown: false}}
+    >
       <Stack.Screen
         name="LoginPage"
         component={LoginPage}
@@ -68,7 +70,6 @@ const Tab = createBottomTabNavigator();
 // Pages for the rest of the app, when the user is logged in
 const AppStack = () => {
   return (
-    <NavigationContainer independent={true}>
       <Tab.Navigator
         initialRouteName="Dashboard"
         screenOptions={({ route }) => ({
@@ -92,7 +93,8 @@ const AppStack = () => {
           tabBarActiveTintColor: '#5A5260',
           tabBarInactiveTintColor: 'gray',
           tabBarShowLabel: true, 
-          tabBarLabelStyle: { fontSize: 10 }, 
+          tabBarLabelStyle: { fontSize: 10 },
+          headerShown: false 
         })}
       >
         <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
@@ -101,14 +103,16 @@ const AppStack = () => {
         <Tab.Screen name="Search" component={Search} options={{ tabBarLabel: 'Search' }} />
         <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 };
 // Determines whether the user is logged in or not, if yes then goes to the Dashboard, if not then goes to the login.
 const AppNavigator = () => {
   const { currentUser } = useAuth();
-
-  return currentUser ? <AppStack /> : <AuthStack />;
+  return(
+    <NavigationContainer independent={true}>
+      {currentUser ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
 };
 
 export default AppNavigator;
