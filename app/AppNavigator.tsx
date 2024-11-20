@@ -18,6 +18,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AddTrip from './AddTrip';  // Import AddTrip
 import Confirm from './Confirm';  // Import Confirm
 import WeeklyCalendar from './WeeklyCalendar';  // Import WeeklyCalendar (if it is used as a standalone screen)
+import TripShowcase from './TripShowcase';
+import TripEditorScreen from "./TripEditorScreen";
 
 
 const Stack = createStackNavigator();
@@ -79,6 +81,15 @@ const AddTripStack = () => {
   );
 };
 
+const TripCardNavigator = () => {
+  return (
+      <Stack.Navigator>
+          <Stack.Screen name="TripShowcase" component={TripShowcase} />
+          <Stack.Screen name="TripEditorScreen" component={TripEditorScreen} />
+      </Stack.Navigator>
+  );
+}
+
 const AppStack = () => {
   return (
       <Tab.Navigator
@@ -111,7 +122,7 @@ const AppStack = () => {
         <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
         <Tab.Screen name="Recommendation" component={Recommendation} options={{ tabBarLabel: 'Recommendation' }} />
         <Tab.Screen name="AddTrip" component={AddTripStack} options={{ tabBarLabel: 'Add Trip' }} />
-        <Tab.Screen name="Search" component={Search} options={{ tabBarLabel: 'Search' }} />
+        <Tab.Screen name="Search" component={TripCardNavigator} options={{ tabBarLabel: 'Search' }} />
         <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
       </Tab.Navigator>
   );
