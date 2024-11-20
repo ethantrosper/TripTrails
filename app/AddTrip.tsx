@@ -15,12 +15,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { getRealm, insertTrip } from './storage/storage';
 import { useAuth } from './auth/authHooks';
 
+const COLOR_SWATCHES = [
+  '#FF5733', '#33FF57', '#3357FF', '#F5A623', '#8E44AD',
+  '#E74C3C', '#3498DB', '#1ABC9C', '#F39C12', '#2C3E50',
+];
+
 const AddTrip = () => {
   const [tripName, setTripName] = useState('');
   const [placeName, setPlaceName] = useState('');
   const [placeLocation, setPlaceLocation] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [tripColor, setTripColor] = useState(COLOR_SWATCHES[0]); // Default color
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
 
@@ -42,7 +48,8 @@ const AddTrip = () => {
         placeLocation,
         new Date(startDate),
         new Date(endDate),
-        placeName
+        placeName,
+        tripColor
       );
       Alert.alert('Success', 'Trip added successfully!', [
         { text: 'OK', onPress: () => navigation.navigate('Dashboard') },
@@ -114,6 +121,20 @@ const AddTrip = () => {
           }}
         />
       )}
+      <Text style={styles.label}>Trip Color:</Text>
+      <View style={styles.colorSwatchContainer}>
+        {COLOR_SWATCHES.map((color) => (
+          <TouchableOpacity
+            key={color}
+            style={[
+              styles.colorSwatch,
+              { backgroundColor: color },
+              color === tripColor ? styles.selectedColorSwatch : null,
+            ]}
+            onPress={() => setTripColor(color)}
+          />
+        ))}
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleAddTrip}>
         <Text style={styles.buttonText}>Add Trip</Text>
       </TouchableOpacity>
@@ -128,11 +149,15 @@ const styles = StyleSheet.create({
   label: { fontSize: 16, marginVertical: 10 },
   dateButton: { backgroundColor: '#f0f0f0', padding: 15, borderRadius: 5, marginBottom: 20 },
   dateText: { fontSize: 16, color: '#333' },
+  colorSwatchContainer: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 20 },
+  colorSwatch: { width: 40, height: 40, borderRadius: 20, margin: 5 },
+  selectedColorSwatch: { borderWidth: 3, borderColor: '#000' },
   button: { backgroundColor: '#5A5260', paddingVertical: 15, borderRadius: 5, alignItems: 'center' },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 });
 
 export default AddTrip;
+
 
 /*
 import React, { useState, useEffect } from 'react';
