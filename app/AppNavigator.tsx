@@ -15,7 +15,7 @@ import Recommendation from './Recommendation';
 import Search from './Search';
 import Profile from './Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
-import AddEvent from './AddEvent';  // Import AddEvent
+import AddTrip from './AddTrip';  // Import AddTrip
 import Confirm from './Confirm';  // Import Confirm
 import WeeklyCalendar from './WeeklyCalendar';  // Import WeeklyCalendar (if it is used as a standalone screen)
 
@@ -68,12 +68,12 @@ const AuthStack = () => {
 };
 const Tab = createBottomTabNavigator();
 // Pages for the rest of the app, when the user is logged in
-const AddEventStack = () => {
+const AddTripStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}
     >
-      <Stack.Screen name="AddEvent" component={AddEvent} />
+      <Stack.Screen name="AddTrip" component={AddTrip} />
       <Stack.Screen name="Confirm" component={Confirm} />
     </Stack.Navigator>
   );
@@ -91,7 +91,7 @@ const AppStack = () => {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'Recommendation') {
               iconName = focused ? 'star' : 'star-outline';
-            } else if (route.name === 'AddEvent') {
+            } else if (route.name === 'AddTrip') {
               iconName = focused ? 'add-circle' : 'add-circle-outline';
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'search-outline';
@@ -110,7 +110,7 @@ const AppStack = () => {
       >
         <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
         <Tab.Screen name="Recommendation" component={Recommendation} options={{ tabBarLabel: 'Recommendation' }} />
-        <Tab.Screen name="AddEvent" component={AddEventStack} options={{ tabBarLabel: 'Add Trip' }} />
+        <Tab.Screen name="AddTrip" component={AddTripStack} options={{ tabBarLabel: 'Add Trip' }} />
         <Tab.Screen name="Search" component={Search} options={{ tabBarLabel: 'Search' }} />
         <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
       </Tab.Navigator>
