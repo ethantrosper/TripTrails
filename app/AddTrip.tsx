@@ -22,8 +22,8 @@ const COLOR_SWATCHES = [
 
 const AddTrip = () => {
   const [tripName, setTripName] = useState('');
-  const [placeName, setPlaceName] = useState('');
   const [placeLocation, setPlaceLocation] = useState('');
+  const [tripDescription, setTripDescription] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [tripColor, setTripColor] = useState(COLOR_SWATCHES[0]); // Default color
@@ -34,7 +34,7 @@ const AddTrip = () => {
   const { currentUser } = useAuth();
 
   const handleAddTrip = async () => {
-    if (!tripName || !placeName || !placeLocation || !startDate || !endDate) {
+    if (!tripName || !placeLocation || !tripDescription || !startDate || !endDate) {
       Alert.alert('Validation Error', 'All fields are required.');
       return;
     }
@@ -48,7 +48,7 @@ const AddTrip = () => {
         placeLocation,
         new Date(startDate),
         new Date(endDate),
-        placeName,
+        tripDescription,
         tripColor
       );
       Alert.alert('Success', 'Trip added successfully!', [
@@ -75,15 +75,18 @@ const AddTrip = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Place Name"
-        value={placeName}
-        onChangeText={setPlaceName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Place Location"
+        placeholder="Location"
         value={placeLocation}
         onChangeText={setPlaceLocation}
+      />
+      <Text style={styles.label}>Trip Description:</Text>
+      <TextInput
+        style={styles.textArea}
+        placeholder="Describe your trip here..."
+        value={tripDescription}
+        onChangeText={setTripDescription}
+        multiline={true}
+        numberOfLines={4}
       />
       <Text style={styles.label}>Start Date:</Text>
       <TouchableOpacity
@@ -146,6 +149,15 @@ const styles = StyleSheet.create({
   container: { flexGrow: 1, padding: 20, backgroundColor: '#fff' },
   header: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
   input: { height: 50, borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 10, marginBottom: 20 },
+  textArea: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 20,
+    textAlignVertical: 'top',
+  },
   label: { fontSize: 16, marginVertical: 10 },
   dateButton: { backgroundColor: '#f0f0f0', padding: 15, borderRadius: 5, marginBottom: 20 },
   dateText: { fontSize: 16, color: '#333' },
@@ -157,7 +169,6 @@ const styles = StyleSheet.create({
 });
 
 export default AddTrip;
-
 
 /*
 import React, { useState, useEffect } from 'react';
