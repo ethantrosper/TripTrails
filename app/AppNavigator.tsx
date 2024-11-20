@@ -68,6 +68,17 @@ const AuthStack = () => {
 };
 const Tab = createBottomTabNavigator();
 // Pages for the rest of the app, when the user is logged in
+const AddEventStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+    >
+      <Stack.Screen name="AddEvent" component={AddEvent} />
+      <Stack.Screen name="Confirm" component={Confirm} />
+    </Stack.Navigator>
+  );
+};
+
 const AppStack = () => {
   return (
       <Tab.Navigator
@@ -99,7 +110,7 @@ const AppStack = () => {
       >
         <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
         <Tab.Screen name="Recommendation" component={Recommendation} options={{ tabBarLabel: 'Recommendation' }} />
-        <Tab.Screen name="AddEvent" component={AddEvent} options={{ tabBarLabel: 'Add Trip' }} />
+        <Tab.Screen name="AddEvent" component={AddEventStack} options={{ tabBarLabel: 'Add Trip' }} />
         <Tab.Screen name="Search" component={Search} options={{ tabBarLabel: 'Search' }} />
         <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
       </Tab.Navigator>
