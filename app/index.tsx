@@ -22,9 +22,7 @@ const App = () => {
   return(
     <RealmProvider {...realmConfig}>
       <AuthProvider>
-        <NavigationContainer independent={true}>
           <AppNavigator />
-        </NavigationContainer>
       </AuthProvider>
     </RealmProvider>
   );
