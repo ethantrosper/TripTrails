@@ -13,7 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import WeeklyCalendar from './WeeklyCalendar';
 import Confirm from './Confirm';
 
-const AddEvent = () => {
+const AddTrip = () => {
   const navigation = useNavigation();
   const [tripName, setTripName] = useState('');
   const [placeName, setPlaceName] = useState('');
@@ -312,4 +312,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddEvent;
+export default AddTrip;

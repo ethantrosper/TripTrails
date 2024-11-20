@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import AddEvent from './AddTrip'; // Adjust the import path as per your folder structure
+import AddTrip from './AddTrip'; // Adjust the import path as per your folder structure
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./AppNavigator";
