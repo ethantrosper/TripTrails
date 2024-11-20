@@ -1,3 +1,140 @@
+
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Platform,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { getRealm, insertTrip } from './storage/storage';
+import { useAuth } from './auth/authHooks';
+
+const AddTrip = () => {
+  const [tripName, setTripName] = useState('');
+  const [placeName, setPlaceName] = useState('');
+  const [placeLocation, setPlaceLocation] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+
+  const navigation = useNavigation();
+  const { currentUser } = useAuth();
+
+  const handleAddTrip = async () => {
+    if (!tripName || !placeName || !placeLocation || !startDate || !endDate) {
+      Alert.alert('Validation Error', 'All fields are required.');
+      return;
+    }
+
+    try {
+      const realm = getRealm();
+      await insertTrip(
+        realm,
+        currentUser,
+        tripName,
+        placeLocation,
+        new Date(startDate),
+        new Date(endDate),
+        placeName
+      );
+      Alert.alert('Success', 'Trip added successfully!', [
+        { text: 'OK', onPress: () => navigation.navigate('Dashboard') },
+      ]);
+    } catch (error) {
+      console.error('Error adding trip:', error);
+      Alert.alert('Error', 'Could not add trip. Please try again later.');
+    }
+  };
+
+  const formatDate = (date) => {
+    return date ? date.toLocaleDateString() : 'Select Date';
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Add a New Trip</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Trip Name"
+        value={tripName}
+        onChangeText={setTripName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Place Name"
+        value={placeName}
+        onChangeText={setPlaceName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Place Location"
+        value={placeLocation}
+        onChangeText={setPlaceLocation}
+      />
+      <Text style={styles.label}>Start Date:</Text>
+      <TouchableOpacity
+        style={styles.dateButton}
+        onPress={() => setShowStartPicker(true)}
+      >
+        <Text style={styles.dateText}>{formatDate(startDate)}</Text>
+      </TouchableOpacity>
+      {showStartPicker && (
+        <DateTimePicker
+          value={startDate || new Date()}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={(event, selectedDate) => {
+            setShowStartPicker(false);
+            if (selectedDate) setStartDate(selectedDate);
+          }}
+        />
+      )}
+      <Text style={styles.label}>End Date:</Text>
+      <TouchableOpacity
+        style={styles.dateButton}
+        onPress={() => setShowEndPicker(true)}
+      >
+        <Text style={styles.dateText}>{formatDate(endDate)}</Text>
+      </TouchableOpacity>
+      {showEndPicker && (
+        <DateTimePicker
+          value={endDate || new Date()}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={(event, selectedDate) => {
+            setShowEndPicker(false);
+            if (selectedDate) setEndDate(selectedDate);
+          }}
+        />
+      )}
+      <TouchableOpacity style={styles.button} onPress={handleAddTrip}>
+        <Text style={styles.buttonText}>Add Trip</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: { flexGrow: 1, padding: 20, backgroundColor: '#fff' },
+  header: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  input: { height: 50, borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 10, marginBottom: 20 },
+  label: { fontSize: 16, marginVertical: 10 },
+  dateButton: { backgroundColor: '#f0f0f0', padding: 15, borderRadius: 5, marginBottom: 20 },
+  dateText: { fontSize: 16, color: '#333' },
+  button: { backgroundColor: '#5A5260', paddingVertical: 15, borderRadius: 5, alignItems: 'center' },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+});
+
+export default AddTrip;
+
+/*
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -313,3 +450,4 @@ const styles = StyleSheet.create({
 });
 
 export default AddTrip;
+*/
