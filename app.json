@@ -1,3 +1,5 @@
+
+
 {
   "expo": {
     "name": "trip-trials",
@@ -19,6 +21,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        
       }
     },
     "web": {

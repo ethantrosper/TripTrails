@@ -1,7 +1,17 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Button, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import openMap from 'react-native-open-maps';
 
 const Recommendation: React.FC = () => {
+
+  const openOSM = () => {
+    openMap({
+      latitude: 37.7749,
+      longitude: -122.4194,
+      provider: undefined, // Use OpenStreetMap
+    });
+  };
+
   return (
     <View style={styles.container}>
       {/* Top Tab Navigation */}
@@ -42,6 +52,11 @@ const Recommendation: React.FC = () => {
               </TouchableOpacity>
               <Text style={styles.rating}>{item.rating} ★</Text>
             </View>
+            <View style={styles.container}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Button title="Open OpenStreetMap" onPress={openOSM} />
+          </View>
+          </View>
           </View>
         ))}
       </ScrollView>
@@ -53,6 +68,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  map: {
+    flex: 1,
   },
   tabContainer: {
     flexDirection: 'row',

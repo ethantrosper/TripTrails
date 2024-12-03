@@ -33,7 +33,7 @@ const TripShowcase = () => {
         />
     );
 };
-//
+
 const styles = StyleSheet.create({
     list: {
         paddingVertical: 10,
